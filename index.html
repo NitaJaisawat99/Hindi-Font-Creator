@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hindi Font Creator</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Arya:wght@400;700&family=Gotu&family=Kalam:wght@300;400;700&family=Kurale&family=Modak&family=Rozha+One&family=Sura:wght@400;700&family=Tillana:wght@400;500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-gradient: linear-gradient(135deg, #8e2de2, #4a00e0);
+            --text-color: #ffffff;
+            --accent-color: #bb86fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            background: var(--surface-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-btns button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .header-btns button:active { opacity: 0.8; }
+
+        /* Main Workspace */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding-bottom: 60px; /* Space for Ad Banner */
+        }
+
+        .canvas-container-wrapper {
+            width: 100%;
+            height: 350px;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Tools Panel */
+        .tools-panel {
+            padding: 15px;
+            background: var(--surface-color);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            flex: 1;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            flex: 1;
+            background: #2c2c2c;
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            resize: none;
+            font-size: 1rem;
+        }
+
+        .btn-add {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            padding: 0 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Font List */
+        .font-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .font-selector::-webkit-scrollbar { height: 6px; }
+        .font-selector::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+
+        .font-item {
+            background: #2c2c2c;
+            padding: 10px 20px;
+            border-radius: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 2px solid transparent;
+            font-size: 1.2rem;
+        }
+
+        .font-item.active {
+            border-color: var(--accent-color);
+            background: rgba(187, 134, 252, 0.1);
+        }
+
+        /* Controls Grid */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .control-item {
+            background: #2c2c2c;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Spanning the opacity slider across two columns for better mobile view */
+        .opacity-control {
+            grid-column: span 2; 
+        }
+
+        .control-item label { font-size: 0.9rem; color: #aaa; }
+        .control-item input[type="color"] {
+            border: none;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            background: transparent;
+        }
+        .control-item input[type="range"] { width: 70%; }
+
+        /* File Inputs hidden */
+        input[type="file"] { display: none; }
+
+        .upload-btn {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: block;
+            border: 1px dashed var(--accent-color);
+        }
+
+        /* AdMob Banner Placeholder */
+        .ad-banner {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background: #000;
+            color: #888;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+            border-top: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hindi Font Creator</h1>
+        <div class="header-btns">
+            <button onclick="shareImage()">Share</button>
+            <button onclick="saveImage()">Save</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="canvas-container-wrapper" id="canvasWrapper">
+            <canvas id="editorCanvas"></canvas>
+        </div>
+
+        <div class="tools-panel">
+            <div class="input-group">
+                <textarea id="textInput" rows="2" placeholder="यहाँ हिंदी में टाइप करें..."></textarea>
+                <button class="btn-add" onclick="addText()">Add</button>
+            </div>
+
+            <div class="font-selector" id="fontSelector">
+                </div>
+
+            <div class="controls-grid">
+                <div class="control-item">
+                    <label>Text Color</label>
+                    <input type="color" id="textColor" value="#ffffff" onchange="updateTextProperty('fill', this.value)">
+                </div>
+                <div class="control-item">
+                    <label>Bg Color</label>
+                    <input type="color" id="canvasBgColor" value="#000000" onchange="changeCanvasColor(this.value)">
+                </div>
+                <div class="control-item opacity-control">
+                    <label>Text Opacity</label>
+                    <input type="range" id="textOpacity" min="0.1" max="1" step="0.1" value="1" onchange="updateTextProperty('opacity', this.value)">
+                </div>
+            </div>
+
+            <label class="upload-btn">
+                📸 Upload Background Image
+                <input type="file" id="bgUploader" accept="image/*" onchange="loadBackgroundImage(event)">
+            </label>
+        </div>
+    </main>
+
+    <div class="ad-banner" id="admobBanner">
+        AdMob Banner (ID: ca-app-pub-1887729646043203/9924065088)
+    </div>
+
+    <script>
+        // --- 1. AdMob Interstitial Logic ---
+        function triggerInterstitialAd() {
+            console.log("Interstitial Ad Triggered: ca-app-pub-1887729646043203/6152474487");
+        }
+
+        // --- 2. Canvas Initialization ---
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const canvas = new fabric.Canvas('editorCanvas', {
+            width: canvasWrapper.clientWidth,
+            height: canvasWrapper.clientHeight,
+            preserveObjectStacking: true,
+            backgroundColor: '#000000' // Default Canvas Color
+        });
+
+        // --- 3. Hindi Fonts Setup ---
+        const hindiFonts = [
+            { name: 'Yatra One', label: 'यात्रा (Bold)' },
+            { name: 'Kalam', label: 'कलम (Handwriting)' },
+            { name: 'Amita', label: 'अमिता (Cursive)' },
+            { name: 'Arya', label: 'आर्या (Modern)' },
+            { name: 'Gotu', label: 'गोटू (Clean)' },
+            { name: 'Kurale', label: 'कुराले (Decorative)' },
+            { name: 'Modak', label: 'मोदक (Artistic)' },
+            { name: 'Rozha One', label: 'रोजा (Classic)' },
+            { name: 'Sura', label: 'सुरा (Retro)' },
+            { name: 'Tillana', label: 'तिलाना (Calligraphy)' }
+        ];
+
+        const fontSelector = document.getElementById('fontSelector');
+        
+        hindiFonts.forEach((font, index) => {
+            let div = document.createElement('div');
+            div.className = 'font-item';
+            div.style.fontFamily = font.name;
+            div.innerText = font.label;
+            if(index === 0) div.classList.add('active');
+            
+            div.onclick = () => {
+                document.querySelectorAll('.font-item').forEach(el => el.classList.remove('active'));
+                div.classList.add('active');
+                updateTextProperty('fontFamily', font.name);
+            };
+            fontSelector.appendChild(div);
+        });
+
+        // --- 4. Core Features ---
+
+        function addText() {
+            const textVal = document.getElementById('textInput').value;
+            if (!textVal) return;
+
+            const activeFont = document.querySelector('.font-item.active').style.fontFamily;
+            const activeColor = document.getElementById('textColor').value;
+
+            const text = new fabric.IText(textVal, {
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                fontFamily: activeFont,
+                fill: activeColor,
+                fontSize: 40,
+                originX: 'center',
+                originY: 'center',
+                transparentCorners: false,
+                cornerColor: '#bb86fc',
+                borderColor: '#bb86fc',
+                cornerStyle: 'circle'
+            });
+
+            canvas.add(text);
+            canvas.setActiveObject(text);
+            document.getElementById('textInput').value = ''; 
+            
+            if(Math.random() > 0.7) triggerInterstitialAd(); 
+        }
+
+        function updateTextProperty(property, value) {
+            const activeObj = canvas.getActiveObject();
+            if (activeObj && activeObj.type === 'i-text') {
+                activeObj.set(property, value);
+                canvas.renderAll();
+            }
+        }
+
+        // NEW: Change Canvas Background Color
+        function changeCanvasColor(color) {
+            // अगर यूज़र ने बैकग्राउंड में कोई इमेज लगाई थी, तो उसे हटा देंगे ताकि सॉलिड कलर दिख सके
+            canvas.backgroundImage = null; 
+            canvas.backgroundColor = color;
+            canvas.renderAll();
+        }
+
+        function loadBackgroundImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(f) {
+                fabric.Image.fromURL(f.target.result, function(img) {
+                    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    img.set({
+                        originX: 'center',
+                        originY: 'center',
+                        left: canvas.width / 2,
+                        top: canvas.height / 2,
+                        scaleX: scale,
+                        scaleY: scale
+                    });
+                    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- 5. Download & Share ---
+
+        function saveImage() {
+            canvas.discardActiveObject(); 
+            canvas.renderAll();
+            
+            const dataURL = canvas.toDataURL({
+                format: 'png',
+                quality: 1.0,
+                multiplier: 3 
+            });
+
+            const link = document.createElement('a');
+            link.download = 'Hindi_Font_Creator_' + Date.now() + '.png';
+            link.href = dataURL;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            triggerInterstitialAd(); 
+        }
+
+        async function shareImage() {
+            canvas.discardActiveObject();
+            canvas.renderAll();
+
+            const dataURL = canvas.toDataURL({ format: 'png', multiplier: 2 });
+            const blob = await (await fetch(dataURL)).blob();
+            const file = new File([blob], 'stylish_hindi_text.png', { type: 'image/png' });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: 'Hindi Font Creator',
+                        text: 'Created with Hindi Font Creator App!',
+                        files: [file]
+                    });
+                } catch (error) {
+                    console.log('Error sharing:', error);
+                }
+            } else {
+                alert("Your device doesn't support direct image sharing. Please Save it first.");
+            }
+        }
+    </script>
+</body>
+</html>
