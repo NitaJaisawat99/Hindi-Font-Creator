@@ -12,7 +12,7 @@ A fully free, fast, and powerful web app (PWA) to create stylish Hindi text, edi
 - **Mobile Friendly** & Dark UI Theme
 
 ## 🔗 Live Demo
-[Click here to use the App](https://NitaJaisawal99.github.io/Hindi-Font-Creator/)
+[Click here to use the App](https://share.google/2ejRR7lNbRMCNce84)
 
 ## 🛠️ Built With
 - HTML5, CSS3, JavaScript
@@ -24,4 +24,4 @@ A fully free, fast, and powerful web app (PWA) to create stylish Hindi text, edi
 2. Tap the 3-dots menu (or Share button on iOS).
 3. Select **"Add to Home Screen"**.
 4. Use it like a normal native app!
-   
+5. 
