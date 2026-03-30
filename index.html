@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Hindi Font Creator</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Arya:wght@400;700&family=Gotu&family=Kalam:wght@300;400;700&family=Kurale&family=Modak&family=Rozha+One&family=Sura:wght@400;700&family=Tillana:wght@400;500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet">
@@ -16,14 +16,10 @@
             --primary-gradient: linear-gradient(135deg, #8e2de2, #4a00e0);
             --text-color: #ffffff;
             --accent-color: #bb86fc;
+            --delete-color: #ff4d4d;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -31,10 +27,9 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* कीबोर्ड फिक्स के लिए */
         }
 
-        /* Header */
         header {
             background: var(--surface-color);
             padding: 15px 20px;
@@ -61,18 +56,14 @@
             font-weight: bold;
             cursor: pointer;
             margin-left: 10px;
-            transition: opacity 0.2s;
         }
 
-        .header-btns button:active { opacity: 0.8; }
-
-        /* Main Workspace */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            padding-bottom: 60px; /* Space for Ad Banner */
+            overflow-y: auto; /* स्क्रॉलिंग सक्षम */
+            padding-bottom: 60px;
         }
 
         .canvas-container-wrapper {
@@ -82,11 +73,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            position: relative;
+            flex-shrink: 0;
         }
 
-        /* Tools Panel */
         .tools-panel {
             padding: 15px;
             background: var(--surface-color);
@@ -110,19 +99,22 @@
             border-radius: 12px;
             resize: none;
             font-size: 1rem;
+            height: 50px;
         }
 
-        .btn-add {
-            background: var(--primary-gradient);
+        .btn-action {
             border: none;
             color: white;
             border-radius: 12px;
             padding: 0 20px;
             font-weight: bold;
             cursor: pointer;
+            min-width: 80px;
         }
 
-        /* Font List */
+        #addBtn { background: var(--primary-gradient); }
+        #deleteBtn { background: var(--delete-color); display: none; }
+
         .font-selector {
             display: flex;
             overflow-x: auto;
@@ -131,9 +123,6 @@
             margin-bottom: 15px;
         }
 
-        .font-selector::-webkit-scrollbar { height: 6px; }
-        .font-selector::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
-
         .font-item {
             background: #2c2c2c;
             padding: 10px 20px;
@@ -141,20 +130,11 @@
             white-space: nowrap;
             cursor: pointer;
             border: 2px solid transparent;
-            font-size: 1.2rem;
         }
 
-        .font-item.active {
-            border-color: var(--accent-color);
-            background: rgba(187, 134, 252, 0.1);
-        }
+        .font-item.active { border-color: var(--accent-color); background: rgba(187, 134, 252, 0.1); }
 
-        /* Controls Grid */
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .control-item {
             background: #2c2c2c;
@@ -165,25 +145,10 @@
             justify-content: space-between;
         }
         
-        /* Spanning the opacity slider across two columns for better mobile view */
-        .opacity-control {
-            grid-column: span 2; 
-        }
+        .opacity-control { grid-column: span 2; }
 
-        .control-item label { font-size: 0.9rem; color: #aaa; }
-        .control-item input[type="color"] {
-            border: none;
-            border-radius: 5px;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            background: transparent;
-        }
-        .control-item input[type="range"] { width: 70%; }
-
-        /* File Inputs hidden */
-        input[type="file"] { display: none; }
-
+        .control-item label { font-size: 0.8rem; color: #aaa; }
+        
         .upload-btn {
             background: #333;
             color: white;
@@ -196,19 +161,19 @@
             border: 1px dashed var(--accent-color);
         }
 
-        /* AdMob Banner Placeholder */
+        input[type="file"] { display: none; }
+
         .ad-banner {
             position: fixed;
             bottom: 0;
             width: 100%;
             height: 50px;
             background: #000;
-            color: #888;
+            color: #444;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.8rem;
-            border-top: 1px solid #333;
+            font-size: 0.7rem;
         }
     </style>
 </head>
@@ -229,25 +194,25 @@
 
         <div class="tools-panel">
             <div class="input-group">
-                <textarea id="textInput" rows="2" placeholder="यहाँ हिंदी में टाइप करें..."></textarea>
-                <button class="btn-add" onclick="addText()">Add</button>
+                <textarea id="textInput" placeholder="यहाँ हिंदी में टाइप करें..."></textarea>
+                <button id="addBtn" class="btn-action" onclick="addText()">Add</button>
+                <button id="deleteBtn" class="btn-action" onclick="deleteObject()">Delete</button>
             </div>
 
-            <div class="font-selector" id="fontSelector">
-                </div>
+            <div class="font-selector" id="fontSelector"></div>
 
             <div class="controls-grid">
                 <div class="control-item">
                     <label>Text Color</label>
-                    <input type="color" id="textColor" value="#ffffff" onchange="updateTextProperty('fill', this.value)">
+                    <input type="color" id="textColor" value="#ffffff" oninput="updateTextProperty('fill', this.value)">
                 </div>
                 <div class="control-item">
                     <label>Bg Color</label>
-                    <input type="color" id="canvasBgColor" value="#000000" onchange="changeCanvasColor(this.value)">
+                    <input type="color" id="canvasBgColor" value="#000000" oninput="changeCanvasColor(this.value)">
                 </div>
                 <div class="control-item opacity-control">
-                    <label>Text Opacity</label>
-                    <input type="range" id="textOpacity" min="0.1" max="1" step="0.1" value="1" onchange="updateTextProperty('opacity', this.value)">
+                    <label>Opacity</label>
+                    <input type="range" id="textOpacity" min="0.1" max="1" step="0.1" value="1" oninput="updateTextProperty('opacity', parseFloat(this.value))">
                 </div>
             </div>
 
@@ -258,98 +223,89 @@
         </div>
     </main>
 
-    <div class="ad-banner" id="admobBanner">
-        AdMob Banner (ID: ca-app-pub-1887729646043203/9924065088)
-    </div>
+    <div class="ad-banner">AdMob: ca-app-pub-1887729646043203/9924065088</div>
 
     <script>
-        // --- 1. AdMob Interstitial Logic ---
-        function triggerInterstitialAd() {
-            console.log("Interstitial Ad Triggered: ca-app-pub-1887729646043203/6152474487");
-        }
-
-        // --- 2. Canvas Initialization ---
         const canvasWrapper = document.getElementById('canvasWrapper');
         const canvas = new fabric.Canvas('editorCanvas', {
             width: canvasWrapper.clientWidth,
-            height: canvasWrapper.clientHeight,
-            preserveObjectStacking: true,
-            backgroundColor: '#000000' // Default Canvas Color
+            height: 350,
+            backgroundColor: '#000000',
+            preserveObjectStacking: true
         });
 
-        // --- 3. Hindi Fonts Setup ---
-        const hindiFonts = [
-            { name: 'Yatra One', label: 'यात्रा (Bold)' },
-            { name: 'Kalam', label: 'कलम (Handwriting)' },
-            { name: 'Amita', label: 'अमिता (Cursive)' },
-            { name: 'Arya', label: 'आर्या (Modern)' },
-            { name: 'Gotu', label: 'गोटू (Clean)' },
-            { name: 'Kurale', label: 'कुराले (Decorative)' },
-            { name: 'Modak', label: 'मोदक (Artistic)' },
-            { name: 'Rozha One', label: 'रोजा (Classic)' },
-            { name: 'Sura', label: 'सुरा (Retro)' },
-            { name: 'Tillana', label: 'तिलाना (Calligraphy)' }
-        ];
-
+        // Fonts
+        const hindiFonts = ['Yatra One', 'Kalam', 'Amita', 'Arya', 'Gotu', 'Kurale', 'Modak', 'Rozha One', 'Sura', 'Tillana'];
         const fontSelector = document.getElementById('fontSelector');
         
         hindiFonts.forEach((font, index) => {
             let div = document.createElement('div');
-            div.className = 'font-item';
-            div.style.fontFamily = font.name;
-            div.innerText = font.label;
-            if(index === 0) div.classList.add('active');
-            
+            div.className = 'font-item' + (index === 0 ? ' active' : '');
+            div.style.fontFamily = font;
+            div.innerText = 'हिंदी टेक्स्ट';
             div.onclick = () => {
                 document.querySelectorAll('.font-item').forEach(el => el.classList.remove('active'));
                 div.classList.add('active');
-                updateTextProperty('fontFamily', font.name);
+                updateTextProperty('fontFamily', font);
             };
             fontSelector.appendChild(div);
         });
 
-        // --- 4. Core Features ---
+        // Selection Logic for Delete Button
+        canvas.on('selection:created', showDelete);
+        canvas.on('selection:updated', showDelete);
+        canvas.on('selection:cleared', hideDelete);
+
+        function showDelete() {
+            document.getElementById('addBtn').style.display = 'none';
+            document.getElementById('deleteBtn').style.display = 'block';
+        }
+
+        function hideDelete() {
+            document.getElementById('addBtn').style.display = 'block';
+            document.getElementById('deleteBtn').style.display = 'none';
+        }
 
         function addText() {
             const textVal = document.getElementById('textInput').value;
             if (!textVal) return;
-
             const activeFont = document.querySelector('.font-item.active').style.fontFamily;
-            const activeColor = document.getElementById('textColor').value;
-
             const text = new fabric.IText(textVal, {
                 left: canvas.width / 2,
                 top: canvas.height / 2,
                 fontFamily: activeFont,
-                fill: activeColor,
+                fill: document.getElementById('textColor').value,
                 fontSize: 40,
                 originX: 'center',
                 originY: 'center',
-                transparentCorners: false,
                 cornerColor: '#bb86fc',
-                borderColor: '#bb86fc',
                 cornerStyle: 'circle'
             });
-
             canvas.add(text);
             canvas.setActiveObject(text);
-            document.getElementById('textInput').value = ''; 
-            
-            if(Math.random() > 0.7) triggerInterstitialAd(); 
+            document.getElementById('textInput').value = '';
+            document.activeElement.blur(); // कीबोर्ड छुपाएं
         }
 
-        function updateTextProperty(property, value) {
+        function deleteObject() {
             const activeObj = canvas.getActiveObject();
-            if (activeObj && activeObj.type === 'i-text') {
-                activeObj.set(property, value);
+            if (activeObj) {
+                canvas.remove(activeObj);
+                canvas.discardActiveObject();
+                hideDelete();
+            }
+        }
+
+        function updateTextProperty(prop, val) {
+            const obj = canvas.getActiveObject();
+            if (obj) {
+                obj.set(prop, val);
                 canvas.renderAll();
             }
         }
 
-        // NEW: Change Canvas Background Color
         function changeCanvasColor(color) {
-            // अगर यूज़र ने बैकग्राउंड में कोई इमेज लगाई थी, तो उसे हटा देंगे ताकि सॉलिड कलर दिख सके
-            canvas.backgroundImage = null; 
+            canvas.backgroundImage = null;
             canvas.backgroundColor = color;
             canvas.renderAll();
         }
@@ -357,67 +313,47 @@
         function loadBackgroundImage(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(f) {
-                fabric.Image.fromURL(f.target.result, function(img) {
+            reader.onload = (f) => {
+                fabric.Image.fromURL(f.target.result, (img) => {
                     const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                    img.set({
-                        originX: 'center',
-                        originY: 'center',
-                        left: canvas.width / 2,
-                        top: canvas.height / 2,
-                        scaleX: scale,
-                        scaleY: scale
-                    });
+                    img.set({ originX: 'center', originY: 'center', left: canvas.width / 2, top: canvas.height / 2, scaleX: scale, scaleY: scale });
                     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
                 });
             };
             reader.readAsDataURL(file);
         }
 
-        // --- 5. Download & Share ---
-
+        // --- FIXED SAVE FUNCTION ---
         function saveImage() {
-            canvas.discardActiveObject(); 
+            canvas.discardActiveObject();
             canvas.renderAll();
             
+            // मोबाइल के लिए सुरक्षित डाउनलोड तरीका
             const dataURL = canvas.toDataURL({
                 format: 'png',
                 quality: 1.0,
-                multiplier: 3 
+                multiplier: 2 // हाई क्वालिटी के लिए
             });
 
             const link = document.createElement('a');
-            link.download = 'Hindi_Font_Creator_' + Date.now() + '.png';
             link.href = dataURL;
+            link.download = 'HindiCreator_' + Date.now() + '.png';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            triggerInterstitialAd(); 
         }
 
         async function shareImage() {
             canvas.discardActiveObject();
             canvas.renderAll();
-
             const dataURL = canvas.toDataURL({ format: 'png', multiplier: 2 });
             const blob = await (await fetch(dataURL)).blob();
-            const file = new File([blob], 'stylish_hindi_text.png', { type: 'image/png' });
-
-            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                try {
-                    await navigator.share({
-                        title: 'Hindi Font Creator',
-                        text: 'Created with Hindi Font Creator App!',
-                        files: [file]
-                    });
-                } catch (error) {
-                    console.log('Error sharing:', error);
-                }
+            const file = new File([blob], 'hindi_art.png', { type: 'image/png' });
+            if (navigator.share) {
+                navigator.share({ files: [file] });
             } else {
-                alert("Your device doesn't support direct image sharing. Please Save it first.");
+                alert("Browser doesn't support sharing. Please use Save.");
             }
         }
     </script>
