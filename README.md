@@ -24,4 +24,4 @@ A fully free, fast, and powerful web app (PWA) to create stylish Hindi text, edi
 2. Tap the 3-dots menu (or Share button on iOS).
 3. Select **"Add to Home Screen"**.
 4. Use it like a normal native app!
-5. 
+(.) 
