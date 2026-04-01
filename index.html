@@ -2,360 +2,215 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hindi Font Creator</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Arya:wght@400;700&family=Gotu&family=Kalam:wght@300;400;700&family=Kurale&family=Modak&family=Rozha+One&family=Sura:wght@400;700&family=Tillana:wght@400;500;600;700;800&family=Yatra+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Arya:wght@400;700&family=Gotu&family=Kalam:wght@300;400;700&family=Kurale&family=Modak&family=Rozha+One&family=Sura:wght@400;700&family=Tillana:wght@400;800&family=Yatra+One&family=Akaya+Telivigala&family=Baloo+2:wght@400;800&family=Eczar:wght@400;800&family=Hind:wght@300;700&family=Inknut+Antiqua:wght@400;900&family=Itim&family=Jaldi:wght@400;700&family=Martel:wght@200;900&family=Mukta:wght@200;800&family=Palanquin:wght@100;700&family=Pragati+Narrow:wght@400;700&family=Rhodium+Libre&family=Sahitya:wght@400;700&family=Teko:wght@300;700&display=swap" rel="stylesheet">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
 
     <style>
         :root {
-            --bg-color: #121212;
-            --surface-color: #1e1e1e;
-            --primary-gradient: linear-gradient(135deg, #8e2de2, #4a00e0);
-            --text-color: #ffffff;
-            --accent-color: #bb86fc;
-            --delete-color: #ff4d4d;
+            --bg-color: #0d0d0d;
+            --panel-bg: #1a1a1a;
+            --accent: #a855f7;
+            --card: #262626;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-color); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden; /* कीबोर्ड फिक्स के लिए */
+        header { background: var(--panel-bg); padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        header h1 { font-size: 1rem; font-weight: 900; color: var(--accent); }
+        .header-btns button { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.8rem; margin-left: 5px; cursor: pointer; }
+        .header-btns .save-btn { background: var(--accent); font-weight: bold; }
+
+        /* Canvas Box - Fully Stable */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; padding: 10px; min-height: 300px; position: relative; }
+        #canvas-wrapper { border: 1px solid #444; box-shadow: 0 0 20px rgba(0,0,0,0.5); background: #000; }
+
+        .tools-panel { 
+            background: var(--panel-bg); border-top: 1px solid #333; 
+            padding: 15px; overflow-y: auto; max-height: 50vh;
+            border-radius: 20px 20px 0 0;
         }
 
-        header {
-            background: var(--surface-color);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
+        .upload-area { background: rgba(168, 85, 247, 0.1); border: 1.5px dashed var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; }
 
-        header h1 {
-            font-size: 1.2rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .input-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        textarea { flex: 1; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; height: 45px; outline: none; }
+        .add-btn { background: var(--accent); border: none; color: white; padding: 0 20px; border-radius: 10px; font-weight: bold; }
 
-        .header-btns button {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: 10px;
-        }
+        .ratio-row { display: flex; gap: 8px; margin-bottom: 15px; }
+        .ratio-btn { flex: 1; background: var(--card); border: 1px solid transparent; color: #888; padding: 8px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+        .ratio-btn.active { border-color: var(--accent); color: white; background: #333; }
 
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto; /* स्क्रॉलिंग सक्षम */
-            padding-bottom: 60px;
-        }
+        .font-list { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none; }
+        .font-card { min-width: 80px; background: var(--card); padding: 10px; border-radius: 10px; text-align: center; font-size: 0.85rem; border: 1px solid transparent; }
+        .font-card.active { border-color: var(--accent); }
 
-        .canvas-container-wrapper {
-            width: 100%;
-            height: 350px;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-        }
+        /* Square Color Buttons */
+        .color-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .color-box { background: var(--card); padding: 6px; border-radius: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+        .color-box label { font-size: 0.55rem; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+        .color-box input[type="color"] { width: 100%; height: 25px; border: none; background: none; padding: 0; cursor: pointer; }
 
-        .tools-panel {
-            padding: 15px;
-            background: var(--surface-color);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            flex: 1;
-        }
+        .range-box { background: var(--card); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .range-box label { display: block; font-size: 0.65rem; color: #888; margin-bottom: 6px; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        textarea {
-            flex: 1;
-            background: #2c2c2c;
-            border: 1px solid #444;
-            color: white;
-            padding: 10px;
-            border-radius: 12px;
-            resize: none;
-            font-size: 1rem;
-            height: 50px;
-        }
-
-        .btn-action {
-            border: none;
-            color: white;
-            border-radius: 12px;
-            padding: 0 20px;
-            font-weight: bold;
-            cursor: pointer;
-            min-width: 80px;
-        }
-
-        #addBtn { background: var(--primary-gradient); }
-        #deleteBtn { background: var(--delete-color); display: none; }
-
-        .font-selector {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .font-item {
-            background: #2c2c2c;
-            padding: 10px 20px;
-            border-radius: 12px;
-            white-space: nowrap;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .font-item.active { border-color: var(--accent-color); background: rgba(187, 134, 252, 0.1); }
-
-        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-        .control-item {
-            background: #2c2c2c;
-            padding: 10px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .opacity-control { grid-column: span 2; }
-
-        .control-item label { font-size: 0.8rem; color: #aaa; }
-        
-        .upload-btn {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-top: 15px;
-            display: block;
-            border: 1px dashed var(--accent-color);
-        }
-
-        input[type="file"] { display: none; }
-
-        .ad-banner {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 50px;
-            background: #000;
-            color: #444;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.7rem;
-        }
+        .ad-space { height: 50px; background: #000; border-top: 1px solid #222; display: flex; justify-content: center; align-items: center; color: #444; font-size: 0.6rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Hindi Font Creator</h1>
+        <h1>HINDI FONT CREATOR</h1>
         <div class="header-btns">
             <button onclick="shareImage()">Share</button>
-            <button onclick="saveImage()">Save</button>
+            <button class="save-btn" onclick="saveImage()">Save</button>
         </div>
     </header>
 
     <main>
-        <div class="canvas-container-wrapper" id="canvasWrapper">
-            <canvas id="editorCanvas"></canvas>
-        </div>
-
-        <div class="tools-panel">
-            <div class="input-group">
-                <textarea id="textInput" placeholder="यहाँ हिंदी में टाइप करें..."></textarea>
-                <button id="addBtn" class="btn-action" onclick="addText()">Add</button>
-                <button id="deleteBtn" class="btn-action" onclick="deleteObject()">Delete</button>
-            </div>
-
-            <div class="font-selector" id="fontSelector"></div>
-
-            <div class="controls-grid">
-                <div class="control-item">
-                    <label>Text Color</label>
-                    <input type="color" id="textColor" value="#ffffff" oninput="updateTextProperty('fill', this.value)">
-                </div>
-                <div class="control-item">
-                    <label>Bg Color</label>
-                    <input type="color" id="canvasBgColor" value="#000000" oninput="changeCanvasColor(this.value)">
-                </div>
-                <div class="control-item opacity-control">
-                    <label>Opacity</label>
-                    <input type="range" id="textOpacity" min="0.1" max="1" step="0.1" value="1" oninput="updateTextProperty('opacity', parseFloat(this.value))">
-                </div>
-            </div>
-
-            <label class="upload-btn">
-                📸 Upload Background Image
-                <input type="file" id="bgUploader" accept="image/*" onchange="loadBackgroundImage(event)">
-            </label>
+        <div id="canvas-wrapper">
+            <canvas id="mainCanvas"></canvas>
         </div>
     </main>
 
-    <div class="ad-banner">AdMob: ca-app-pub-1887729646043203/9924065088</div>
+    <div class="tools-panel">
+        <label class="upload-area">
+            📸 GALLERY SE PHOTO CHUNEIN
+            <input type="file" hidden accept="image/*" onchange="handleUpload(event)">
+        </label>
+
+        <div class="input-row">
+            <textarea id="textInput" placeholder="यहाँ टाइप करें..."></textarea>
+            <button class="add-btn" id="mainActionBtn" onclick="addText()">ADD</button>
+        </div>
+
+        <div class="ratio-row">
+            <button class="ratio-btn active" onclick="changeRatio(1, 1, this)">1:1</button>
+            <button class="ratio-btn" onclick="changeRatio(9, 16, this)">9:16</button>
+            <button class="ratio-btn" onclick="changeRatio(16, 9, this)">16:9</button>
+        </div>
+
+        <div class="font-list" id="fontContainer"></div>
+
+        <div class="color-row">
+            <div class="color-box">
+                <label>Text 1</label>
+                <input type="color" id="c1" value="#ffffff" oninput="applyStyles()">
+            </div>
+            <div class="color-box">
+                <label>Text 2</label>
+                <input type="color" id="c2" value="#ffffff" oninput="applyStyles()">
+            </div>
+            <div class="color-box">
+                <label>Shadow</label>
+                <input type="color" id="cs" value="#000000" oninput="applyStyles()">
+            </div>
+            <div class="color-box">
+                <label>Bg</label>
+                <input type="color" id="cb" value="#000000" oninput="changeBg(this.value)">
+            </div>
+        </div>
+
+        <div class="range-box">
+            <label>TEXT SHADOW BLUR</label>
+            <input type="range" id="sBlur" min="0" max="50" value="0" oninput="applyStyles()">
+        </div>
+
+        <div class="range-box">
+            <label>IMAGE BLUR</label>
+            <input type="range" id="iBlur" min="0" max="25" value="0" oninput="applyImgBlur()">
+        </div>
+        
+        <div style="height: 20px;"></div>
+    </div>
+
+    <div class="ad-space">AdMob: ca-app-pub-1887729646043203/9924065088</div>
 
     <script>
-        const canvasWrapper = document.getElementById('canvasWrapper');
-        const canvas = new fabric.Canvas('editorCanvas', {
-            width: canvasWrapper.clientWidth,
-            height: 350,
-            backgroundColor: '#000000',
-            preserveObjectStacking: true
-        });
+        const canvas = new fabric.Canvas('mainCanvas', { backgroundColor: '#000000', preserveObjectStacking: true });
 
-        // Fonts
-        const hindiFonts = ['Yatra One', 'Kalam', 'Amita', 'Arya', 'Gotu', 'Kurale', 'Modak', 'Rozha One', 'Sura', 'Tillana'];
-        const fontSelector = document.getElementById('fontSelector');
-        
-        hindiFonts.forEach((font, index) => {
-            let div = document.createElement('div');
-            div.className = 'font-item' + (index === 0 ? ' active' : '');
-            div.style.fontFamily = font;
-            div.innerText = 'हिंदी टेक्स्ट';
-            div.onclick = () => {
-                document.querySelectorAll('.font-item').forEach(el => el.classList.remove('active'));
-                div.classList.add('active');
-                updateTextProperty('fontFamily', font);
+        function changeRatio(w, h, el) {
+            document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            const parent = document.querySelector('main');
+            const maxW = parent.clientWidth - 40;
+            const maxH = parent.clientHeight - 40;
+            let tw, th;
+            if (w / h > maxW / maxH) { tw = maxW; th = maxW * (h / w); } else { th = maxH; tw = maxH * (w / h); }
+            canvas.setDimensions({ width: tw, height: th });
+            canvas.renderAll();
+        }
+
+        window.onload = () => changeRatio(1, 1, document.querySelector('.ratio-btn'));
+
+        const hindiFonts = ['Yatra One', 'Kalam', 'Amita', 'Arya', 'Gotu', 'Kurale', 'Modak', 'Rozha One', 'Sura', 'Tillana', 'Akaya Telivigala', 'Baloo 2', 'Eczar', 'Hind', 'Inknut Antiqua', 'Itim', 'Jaldi', 'Martel', 'Mukta', 'Palanquin', 'Pragati Narrow', 'Rhodium Libre', 'Sahitya', 'Teko'];
+        const fontBox = document.getElementById('fontContainer');
+        hindiFonts.forEach((f, i) => {
+            const d = document.createElement('div');
+            d.className = 'font-card' + (i===0 ? ' active' : '');
+            d.style.fontFamily = f;
+            d.innerText = 'हिंदी';
+            d.onclick = () => {
+                document.querySelectorAll('.font-card').forEach(c => c.classList.remove('active'));
+                d.classList.add('active');
+                const obj = canvas.getActiveObject();
+                if(obj) { obj.set('fontFamily', f); canvas.renderAll(); }
             };
-            fontSelector.appendChild(div);
+            fontBox.appendChild(d);
         });
 
-        // Selection Logic for Delete Button
-        canvas.on('selection:created', showDelete);
-        canvas.on('selection:updated', showDelete);
-        canvas.on('selection:cleared', hideDelete);
-
-        function showDelete() {
-            document.getElementById('addBtn').style.display = 'none';
-            document.getElementById('deleteBtn').style.display = 'block';
-        }
-
-        function hideDelete() {
-            document.getElementById('addBtn').style.display = 'block';
-            document.getElementById('deleteBtn').style.display = 'none';
-        }
+        canvas.on('selection:created', () => { document.getElementById('mainActionBtn').innerText = 'DEL'; document.getElementById('mainActionBtn').style.background = '#ef4444'; document.getElementById('mainActionBtn').onclick = deleteObj; });
+        canvas.on('selection:cleared', () => { document.getElementById('mainActionBtn').innerText = 'ADD'; document.getElementById('mainActionBtn').style.background = 'var(--accent)'; document.getElementById('mainActionBtn').onclick = addText; });
 
         function addText() {
-            const textVal = document.getElementById('textInput').value;
-            if (!textVal) return;
-            const activeFont = document.querySelector('.font-item.active').style.fontFamily;
-            const text = new fabric.IText(textVal, {
-                left: canvas.width / 2,
-                top: canvas.height / 2,
-                fontFamily: activeFont,
-                fill: document.getElementById('textColor').value,
-                fontSize: 40,
-                originX: 'center',
-                originY: 'center',
-                cornerColor: '#bb86fc',
-                cornerStyle: 'circle'
+            const val = document.getElementById('textInput').value || 'नमस्ते';
+            const font = document.querySelector('.font-card.active').style.fontFamily;
+            const t = new fabric.IText(val, { 
+                left: canvas.width/2, top: canvas.height/2, 
+                fontFamily: font, fontSize: 40, fill: '#fff', 
+                originX: 'center', originY: 'center',
+                cornerColor: 'var(--accent)', cornerSize: 10
             });
-            canvas.add(text);
-            canvas.setActiveObject(text);
+            canvas.add(t); canvas.setActiveObject(t); applyStyles();
             document.getElementById('textInput').value = '';
-            document.activeElement.blur(); // कीबोर्ड छुपाएं
         }
 
-        function deleteObject() {
-            const activeObj = canvas.getActiveObject();
-            if (activeObj) {
-                canvas.remove(activeObj);
-                canvas.discardActiveObject();
-                hideDelete();
-            }
-        }
-
-        function updateTextProperty(prop, val) {
+        function applyStyles() {
             const obj = canvas.getActiveObject();
-            if (obj) {
-                obj.set(prop, val);
-                canvas.renderAll();
-            }
-        }
+            if(!obj) return;
+            const c1 = document.getElementById('c1').value;
+            const c2 = document.getElementById('c2').value;
+            const sb = parseInt(document.getElementById('sBlur').value);
+            const sc = document.getElementById('cs').value;
 
-        function changeCanvasColor(color) {
-            canvas.backgroundImage = null;
-            canvas.backgroundColor = color;
+            obj.set('fill', c1 === c2 ? c1 : new fabric.Gradient({ type: 'linear', coords: { x1: 0, y1: 0, x2: obj.width, y2: 0 }, colorStops: [{ offset: 0, color: c1 }, { offset: 1, color: c2 }] }));
+            obj.set('shadow', sb === 0 ? null : new fabric.Shadow({ color: sc, blur: sb }));
             canvas.renderAll();
         }
 
-        function loadBackgroundImage(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+        function applyImgBlur() {
+            const bg = canvas.backgroundImage;
+            if(bg) { bg.filters = [new fabric.Image.filters.Blur({ blur: document.getElementById('iBlur').value / 25 })]; bg.applyFilters(); canvas.renderAll(); }
+        }
+
+        function handleUpload(e) {
             const reader = new FileReader();
-            reader.onload = (f) => {
-                fabric.Image.fromURL(f.target.result, (img) => {
-                    const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-                    img.set({ originX: 'center', originY: 'center', left: canvas.width / 2, top: canvas.height / 2, scaleX: scale, scaleY: scale });
-                    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // --- FIXED SAVE FUNCTION ---
-        function saveImage() {
-            canvas.discardActiveObject();
-            canvas.renderAll();
-            
-            // मोबाइल के लिए सुरक्षित डाउनलोड तरीका
-            const dataURL = canvas.toDataURL({
-                format: 'png',
-                quality: 1.0,
-                multiplier: 2 // हाई क्वालिटी के लिए
+            reader.onload = (f) => fabric.Image.fromURL(f.target.result, (img) => {
+                const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), { originX: 'center', originY: 'center', left: canvas.width/2, top: canvas.height/2, scaleX: scale, scaleY: scale });
             });
-
-            const link = document.createElement('a');
-            link.href = dataURL;
-            link.download = 'HindiCreator_' + Date.now() + '.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            reader.readAsDataURL(e.target.files[0]);
         }
 
-        async function shareImage() {
-            canvas.discardActiveObject();
-            canvas.renderAll();
-            const dataURL = canvas.toDataURL({ format: 'png', multiplier: 2 });
-            const blob = await (await fetch(dataURL)).blob();
-            const file = new File([blob], 'hindi_art.png', { type: 'image/png' });
-            if (navigator.share) {
-                navigator.share({ files: [file] });
-            } else {
-                alert("Browser doesn't support sharing. Please use Save.");
-            }
-        }
+        function deleteObj() { if(canvas.getActiveObject()) { canvas.remove(canvas.getActiveObject()); canvas.discardActiveObject(); } }
+        function changeBg(c) { canvas.backgroundImage = null; canvas.backgroundColor = c; canvas.renderAll(); }
+        function saveImage() { canvas.discardActiveObject(); canvas.renderAll(); const link = document.createElement('a'); link.href = canvas.toDataURL({ multiplier: 3 }); link.download = 'HindiFont.png'; link.click(); }
+        async function shareImage() { canvas.discardActiveObject(); canvas.renderAll(); const blob = await (await fetch(canvas.toDataURL())).blob(); const file = new File([blob], 'art.png', {type: 'image/png'}); if(navigator.share) navigator.share({files: [file]}); }
     </script>
 </body>
 </html>
