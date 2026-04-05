@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hindi Font Creator PRO</title>
+    <title>Hindi Font Creator - PixelLab Style</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Amita:wght@400;700&family=Arya:wght@400;700&family=Gotu&family=Kalam:wght@300;400;700&family=Kurale&family=Modak&family=Rozha+One&family=Sura:wght@400;700&family=Tillana:wght@400;800&family=Yatra+One&family=Akaya+Telivigala&family=Baloo+2:wght@400;800&family=Eczar:wght@400;800&family=Hind:wght@300;700&family=Inknut+Antiqua:wght@400;900&family=Itim&family=Jaldi:wght@400;700&family=Martel:wght@200;900&family=Mukta:wght@200;800&family=Palanquin:wght@100;700&family=Pragati+Narrow:wght@400;700&family=Rhodium+Libre&family=Sahitya:wght@400;700&family=Teko:wght@300;700&display=swap" rel="stylesheet">
     
@@ -15,48 +15,42 @@
         body { background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         header { background: var(--panel); padding: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        header h1 { font-size: 1rem; background: linear-gradient(135deg, #9333ea, #4f46e5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
-        .header-btns button { background: #333; color: white; border: none; padding: 8px 15px; border-radius: 10px; font-size: 0.8rem; margin-left: 5px; cursor: pointer; font-weight: 600; }
-        .header-btns .save-btn { background: linear-gradient(135deg, #9333ea, #4f46e5); }
+        header h1 { font-size: 0.9rem; font-weight: 900; color: var(--accent); }
+        .dl-btn { background: linear-gradient(135deg, #9333ea, #4f46e5); color: white; border: none; padding: 8px 20px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4); }
 
-        main { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; position: relative; padding: 15px; overflow: hidden; }
-        #canvas-holder { box-shadow: 0 0 30px rgba(0,0,0,0.7); border: 1px solid #333; line-height: 0; }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; padding: 10px; overflow: hidden; }
+        #canvas-holder { box-shadow: 0 0 30px rgba(0,0,0,0.7); border: 1px solid #333; }
 
         .tools-panel { background: var(--panel); border-top: 1px solid #333; padding: 15px; overflow-y: auto; max-height: 52vh; border-radius: 24px 24px 0 0; }
-        .upload-box { background: rgba(168, 85, 247, 0.1); border: 1.5px dashed var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.8rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; }
+        .upload-box { background: rgba(168, 85, 247, 0.1); border: 1.5px dashed var(--accent); color: var(--accent); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.75rem; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: block; }
 
         .input-row { display: flex; gap: 8px; margin-bottom: 15px; }
-        textarea { flex: 1; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; height: 48px; outline: none; font-size: 0.9rem; }
+        textarea { flex: 1; background: #000; border: 1px solid #444; color: white; padding: 10px; border-radius: 10px; height: 48px; outline: none; font-size: 0.85rem; resize: none; }
         .action-btn { background: var(--accent); border: none; color: white; padding: 0 15px; border-radius: 10px; font-weight: bold; }
 
         .ratio-row { display: flex; gap: 8px; margin-bottom: 15px; }
-        .ratio-btn { flex: 1; background: var(--card); border: 1px solid transparent; color: #888; padding: 10px; border-radius: 10px; font-size: 0.75rem; font-weight: bold; }
+        .ratio-btn { flex: 1; background: var(--card); border: 1px solid transparent; color: #888; padding: 10px; border-radius: 10px; font-size: 0.7rem; font-weight: bold; }
         .ratio-btn.active { border-color: var(--accent); color: white; background: #2d2d2d; }
 
         .font-list { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 12px; margin-bottom: 15px; scrollbar-width: none; }
-        .font-card { min-width: 90px; background: var(--card); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.9rem; border: 2px solid transparent; }
+        .font-card { min-width: 85px; background: var(--card); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.85rem; border: 2px solid transparent; }
         .font-card.active { border-color: var(--accent); }
 
         .color-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .color-item { background: var(--card); padding: 8px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; }
-        .color-item label { font-size: 0.6rem; color: #777; margin-bottom: 4px; }
-        .color-item input[type="color"] { width: 100%; height: 28px; border: none; background: none; cursor: pointer; }
+        .color-item label { font-size: 0.55rem; color: #777; margin-bottom: 4px; }
+        .color-item input[type="color"] { width: 100%; height: 28px; border: none; background: none; }
 
         .slider-box { background: var(--card); padding: 12px; border-radius: 12px; margin-bottom: 10px; }
-        .slider-box label { display: block; font-size: 0.65rem; color: #888; margin-bottom: 6px; }
+        .slider-box label { display: block; font-size: 0.6rem; color: #888; margin-bottom: 6px; }
         input[type="range"] { width: 100%; accent-color: var(--accent); }
-
-        .ad-container { height: 50px; background: #000; border-top: 1px solid #222; display: flex; justify-content: center; align-items: center; color: #444; font-size: 0.6rem; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>HINDI FONT CREATOR</h1>
-    <div class="header-btns">
-        <button onclick="triggerInterstitial('share')">Share</button>
-        <button class="save-btn" onclick="triggerInterstitial('save')">Save</button>
-    </div>
+    <button class="dl-btn" onclick="pixelLabStyleSave()">SHARE / SAVE</button>
 </header>
 
 <main id="drawZone">
@@ -66,19 +60,19 @@
 </main>
 
 <div class="tools-panel">
-    <label class="upload-box">🖼️ PHOTO GALLERY SE CHUNEIN
+    <label class="upload-box">🖼️ PHOTO GALLERY SE LAYEN
         <input type="file" hidden accept="image/*" onchange="loadImg(event)">
     </label>
 
     <div class="input-row">
-        <textarea id="ti" placeholder="यहाँ टाइप करें..."></textarea>
+        <textarea id="ti" placeholder="यहाँ लिखें..."></textarea>
         <button class="action-btn" id="ab" onclick="addT()">ADD</button>
     </div>
 
     <div class="ratio-row">
         <button class="ratio-btn active" onclick="setR(1, 1, this)">1:1</button>
+        <button class="ratio-btn" onclick="setR(4, 5, this)">4:5</button>
         <button class="ratio-btn" onclick="setR(9, 16, this)">9:16</button>
-        <button class="ratio-btn" onclick="setR(16, 9, this)">16:9</button>
     </div>
 
     <div class="font-list" id="fl"></div>
@@ -92,41 +86,69 @@
 
     <div class="slider-box"><label>TEXT SHADOW BLUR</label><input type="range" id="tsb" min="0" max="50" value="0" oninput="upd()"></div>
     <div class="slider-box"><label>IMAGE BLUR</label><input type="range" id="tib" min="0" max="25" value="0" oninput="updBlur()"></div>
-    <div style="height: 20px;"></div>
 </div>
-
-<div class="ad-container">Banner Ad: ca-app-pub-1887729646043203/9924065088</div>
 
 <script>
     const canvas = new fabric.Canvas('c', { backgroundColor: '#000', preserveObjectStacking: true });
 
-    // AdMob Interstitial Logic (Median.co Integration)
-    function triggerInterstitial(action) {
-        // Median.co Interstitial ID: ca-app-pub-1887729646043203/6152474487
-        if (window.median && window.median.admob) {
-            window.median.admob.showInterstitial();
-        }
+    // --- PixelLab Style Native Share & Save ---
+    async function pixelLabStyleSave() {
+        canvas.discardActiveObject();
+        canvas.renderAll();
         
-        if(action === 'save') saveImg();
-        if(action === 'share') shareImg();
+        const dataURL = canvas.toDataURL({ format: 'png', quality: 1, multiplier: 3 });
+        const fileName = 'Hindi_Design_' + Date.now() + '.png';
+
+        try {
+            // Convert dataURL to Blob/File for sharing
+            const response = await fetch(dataURL);
+            const blob = await response.blob();
+            const file = new File([blob], fileName, { type: 'image/png' });
+
+            // 1. Android Native Share Sheet (PixelLab experience)
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: 'Save Image',
+                    text: 'Hindi Font Creator'
+                });
+            } 
+            // 2. Median Native Download (If share fails)
+            else if (window.median && window.median.download) {
+                window.median.download.downloadFile({
+                    url: dataURL,
+                    filename: fileName
+                });
+            }
+            // 3. Last Resort Fallback
+            else {
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = fileName;
+                link.click();
+            }
+        } catch (e) {
+            // Critical Fallback
+            const win = window.open();
+            win.document.write('<img src="'+dataURL+'" style="width:100%;"><p style="text-align:center;">Hold to Save Image</p>');
+        }
     }
 
+    // --- Core UI Logic ---
     function setR(w, h, btn) {
         document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const zone = document.getElementById('drawZone');
-        const mw = zone.clientWidth - 40;
-        const mh = zone.clientHeight - 40;
+        const mw = zone.clientWidth - 40, mh = zone.clientHeight - 40;
         let finalW, finalH;
         if (w/h > mw/mh) { finalW = mw; finalH = mw*(h/w); } else { finalH = mh; finalW = mh*(w/h); }
         canvas.setDimensions({ width: finalW, height: finalH });
         canvas.renderAll();
     }
-
     window.onload = () => setR(1, 1, document.querySelector('.ratio-btn'));
 
     const fonts = ['Yatra One', 'Kalam', 'Amita', 'Arya', 'Gotu', 'Kurale', 'Modak', 'Rozha One', 'Sura', 'Tillana', 'Akaya Telivigala', 'Baloo 2', 'Eczar', 'Hind', 'Inknut Antiqua', 'Itim', 'Jaldi', 'Martel', 'Mukta', 'Palanquin', 'Pragati Narrow', 'Rhodium Libre', 'Sahitya', 'Teko'];
-    const fl = document.getElementById('fl');
+    const fl_box = document.getElementById('fl');
     fonts.forEach((f, i) => {
         const d = document.createElement('div');
         d.className = 'font-card' + (i===0 ? ' active' : '');
@@ -136,7 +158,7 @@
             d.classList.add('active');
             if(canvas.getActiveObject()) { canvas.getActiveObject().set('fontFamily', f); canvas.renderAll(); }
         };
-        fl.appendChild(d);
+        fl_box.appendChild(d);
     });
 
     canvas.on('selection:created', () => { const b=document.getElementById('ab'); b.innerText='DEL'; b.style.background='#ef4444'; b.onclick=delO; });
@@ -145,7 +167,7 @@
     function addT() {
         const val = document.getElementById('ti').value || 'नमस्ते';
         const f = document.querySelector('.font-card.active').style.fontFamily;
-        const t = new fabric.IText(val, { left: canvas.width/2, top: canvas.height/2, fontFamily: f, fontSize: 45, fill: '#fff', originX: 'center', originY: 'center', cornerColor: 'var(--accent)', cornerSize: 12 });
+        const t = new fabric.IText(val, { left: canvas.width/2, top: canvas.height/2, fontFamily: f, fontSize: 50, fill: '#fff', originX: 'center', originY: 'center', cornerColor: 'var(--accent)', cornerSize: 12 });
         canvas.add(t); canvas.setActiveObject(t); upd();
         document.getElementById('ti').value = '';
     }
@@ -154,16 +176,14 @@
         const o = canvas.getActiveObject(); if(!o) return;
         const c1 = document.getElementById('tc1').value, c2 = document.getElementById('tc2').value, sb = parseInt(document.getElementById('tsb').value), sc = document.getElementById('tcs').value;
         o.set('fill', c1 === c2 ? c1 : new fabric.Gradient({ type: 'linear', coords: { x1: 0, y1: 0, x2: o.width, y2: 0 }, colorStops: [{ offset: 0, color: c1 }, { offset: 1, color: c2 }] }));
-        o.set('shadow', sb === 0 ? null : new fabric.Shadow({ color: sc, blur: sb }));
+        o.set('shadow', sb === 0 ? null : new fabric.Shadow({ color: sc, blur: sb, offsetX: 2, offsetY: 2 }));
         canvas.renderAll();
     }
 
     function updBlur() { const bg = canvas.backgroundImage; if(bg) { bg.filters = [new fabric.Image.filters.Blur({ blur: document.getElementById('tib').value/25 })]; bg.applyFilters(); canvas.renderAll(); } }
-    function loadImg(e) { const r = new FileReader(); r.onload = (f) => fabric.Image.fromURL(f.target.result, (img) => { const s = Math.max(canvas.width/img.width, canvas.height/img.height); canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), { originX: 'center', originY: 'center', left: canvas.width/2, top: canvas.height/2, scaleX: s, scaleY: s }); }); r.readAsDataURL(e.target.files[0]); }
+    function loadImg(e) { const r = new FileReader(); r.onload = (f) => fabric.Image.fromURL(f.target.result, (img) => { const s = Math.max(canvas.width/img.width, canvas.height/img.height); canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), { originX: 'center', originY: 'center', left: canvas.width/2, top: canvas.height/2, scaleX: s, scaleY: s }); }, { crossOrigin: 'anonymous' }); r.readAsDataURL(e.target.files[0]); }
     function delO() { canvas.remove(canvas.getActiveObject()); canvas.discardActiveObject(); }
     function chBg(c) { canvas.backgroundImage = null; canvas.backgroundColor = c; canvas.renderAll(); }
-    function saveImg() { canvas.discardActiveObject(); canvas.renderAll(); const l = document.createElement('a'); l.href = canvas.toDataURL({ multiplier: 3 }); l.download = 'Hindi_Art.png'; l.click(); }
-    async function shareImg() { canvas.discardActiveObject(); canvas.renderAll(); const b = await (await fetch(canvas.toDataURL())).blob(); const f = new File([b], 'art.png', {type: 'image/png'}); if(navigator.share) navigator.share({files: [f]}); }
 </script>
 </body>
 </html>
